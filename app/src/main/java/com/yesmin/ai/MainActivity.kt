@@ -80,7 +80,7 @@ class MainActivity : Activity() {
 
         // Chat area
         scroll = ScrollView(this).apply {
-            fillViewport = true
+            setFillViewport(true)
         }
 
         messages = LinearLayout(this).apply {
@@ -108,7 +108,7 @@ class MainActivity : Activity() {
             setHintTextColor(Color.GRAY)
             setTextColor(Color.WHITE)
             textSize = 15f
-            singleLine = true
+            setSingleLine(true)
             imeOptions = EditorInfo.IME_ACTION_SEND
             setPadding(dp(15), dp(12), dp(15), dp(12))
             background = rounded(Color.rgb(30, 35, 60), 25)
