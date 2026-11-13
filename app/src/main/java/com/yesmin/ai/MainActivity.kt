@@ -1,4 +1,3 @@
-w
 
 package com.yesmin.ai
 
