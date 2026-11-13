@@ -1,3 +1,4 @@
+w
 
 package com.yesmin.ai
 
@@ -17,9 +18,11 @@ import android.content.pm.PackageManager
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.RecognitionListener
-
+import android.speech.tts.TextToSpeech
+import java.util.Locale
 class MainActivity : Activity() {
     private var speechRecognizer: SpeechRecognizer? = null
+private var textToSpeech: TextToSpeech? = null
     private val REQUEST_RECORD_AUDIO = 100
 
     private lateinit var messages: LinearLayout
@@ -42,7 +45,20 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+textToSpeech = TextToSpeech(this) { status ->
+    if (status == TextToSpeech.SUCCESS) {
+        val result = textToSpeech?.setLanguage(Locale("en", "IN"))
 
+        if (result == TextToSpeech.LANG_MISSING_DATA ||
+            result == TextToSpeech.LANG_NOT_SUPPORTED
+        ) {
+            textToSpeech?.setLanguage(Locale("hi", "IN"))
+        }
+
+        textToSpeech?.setSpeechRate(0.95f)
+        textToSpeech?.setPitch(1.1f)
+    }
+}
         window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         )
@@ -302,8 +318,22 @@ class MainActivity : Activity() {
     override fun onDestroy() {
         speechRecognizer?.destroy()
         speechRecognizer = null
+
+        textToSpeech?.stop()
+        textToSpeech?.shutdown()
+
         super.onDestroy()
     }
+
+    private fun speakReply(text: String) {
+        textToSpeech?.speak(
+            text,
+            TextToSpeech.QUEUE_FLUSH,
+            null,
+            "YESMIN_REPLY"
+        )
+    }
+
     private fun sendMessage() {
         val message = input.text.toString().trim()
 
@@ -312,10 +342,9 @@ class MainActivity : Activity() {
         addMessage(message, true)
         input.text.clear()
 
-        addMessage(
-            "Your chat interface is working! Gemini AI connection is our next step.",
-            false
-        )
+        val reply = "Your chat interface is working! Gemini AI connection is our next step."
+
+        addMessage(reply, false)
+        speakReply(reply)
     }
 }
-
