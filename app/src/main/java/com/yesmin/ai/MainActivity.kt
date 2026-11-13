@@ -333,17 +333,55 @@ textToSpeech = TextToSpeech(this) { status ->
         )
     }
 
-    private fun sendMessage() {
-        val message = input.text.toString().trim()
+private fun sendMessage() {
+    val message = input.text.toString().trim()
 
-        if (message.isEmpty()) return
+    if (message.isEmpty()) return
 
-        addMessage(message, true)
-        input.text.clear()
+    addMessage(message, true)
+    input.text.clear()
 
-        val reply = "Your chat interface is working! Gemini AI connection is our next step."
+    val question = message.lowercase()
+    val reply = when {
+        question.contains("hello") ||
+        question.contains("hi") ||
+        question.contains("hey") ->
+            "Hello! Main YESMIN hoon. How can I help you?"
 
-        addMessage(reply, false)
-        speakReply(reply)
+        question.contains("your name") ||
+        question.contains("who are you") ->
+            "My name is YESMIN AI. I am your smart assistant."
+
+        question.contains("how are you") ->
+            "I am doing great! How are you?"
+
+        question.contains("thank") ->
+            "You're welcome! I am always ready to help."
+
+        question.contains("time") ->
+            "The current time is ${
+                java.text.SimpleDateFormat("hh:mm a", java.util.Locale.getDefault())
+                    .format(java.util.Date())
+            }"
+
+        question.contains("date") ||
+        question.contains("today") ->
+            "Today's date is ${
+                java.text.SimpleDateFormat("dd MMMM yyyy", java.util.Locale.getDefault())
+                    .format(java.util.Date())
+            }"
+
+        question.contains("good morning") ->
+            "Good morning! Have a wonderful day."
+
+        question.contains("good night") ->
+            "Good night! Sweet dreams."
+
+        else ->
+            "I am still learning. Please ask me something simple!"
     }
+
+    addMessage(reply, false)
+    speakReply(reply)
+}
 }
