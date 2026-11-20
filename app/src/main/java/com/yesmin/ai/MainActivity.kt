@@ -331,7 +331,16 @@ textToSpeech?.setPitch(1.2f)
             "YESMIN_REPLY"
         )
     }
+private fun openApp(packageName: String, appName: String): String {
+    val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
 
+    return if (launchIntent != null) {
+        startActivity(launchIntent)
+        "Opening $appName for you!"
+    } else {
+        "$appName is not installed on this device."
+    }
+}
 private fun sendMessage() {
     val message = input.text.toString().trim()
 
@@ -341,7 +350,26 @@ private fun sendMessage() {
     input.text.clear()
 
     val question = message.lowercase()
-    val reply = when {
+    val wantsOpen = listOf(
+    "open", "launch", "khol", "kholo", "chalao",
+    "start", "खोल", "चालू"
+).any { question.contains(it) }
+
+val appReply = when {
+    wantsOpen && (question.contains("youtube") || question.contains("यूट्यूब")) ->
+        openApp("com.google.android.youtube", "YouTube")
+
+    wantsOpen && (question.contains("whatsapp") || question.contains("what's app") ||
+        question.contains("व्हाट्सएप") || question.contains("व्हाट्स ऐप")) ->
+        openApp("com.whatsapp", "WhatsApp")
+
+    wantsOpen && (question.contains("chrome") || question.contains("क्रोम")) ->
+        openApp("com.android.chrome", "Chrome")
+
+    else -> null
+}
+
+val reply = appReply ?: when {
         question.contains("hello") ||
         question.contains("hi") ||
         question.contains("hey") ->
@@ -384,3 +412,4 @@ private fun sendMessage() {
     speakReply(reply)
 }
 }
+
