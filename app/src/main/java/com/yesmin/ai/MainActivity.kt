@@ -46,16 +46,15 @@ private var textToSpeech: TextToSpeech? = null
         super.onCreate(savedInstanceState)
 textToSpeech = TextToSpeech(this) { status ->
     if (status == TextToSpeech.SUCCESS) {
-        val result = textToSpeech?.setLanguage(Locale("en", "IN"))
-
+val result = textToSpeech?.setLanguage(Locale("en", "IN"))
         if (result == TextToSpeech.LANG_MISSING_DATA ||
             result == TextToSpeech.LANG_NOT_SUPPORTED
         ) {
             textToSpeech?.setLanguage(Locale("hi", "IN"))
         }
 
-        textToSpeech?.setSpeechRate(0.95f)
-        textToSpeech?.setPitch(1.1f)
+        textToSpeech?.setSpeechRate(0.85f)
+textToSpeech?.setPitch(1.2f)
     }
 }
         window.setSoftInputMode(
